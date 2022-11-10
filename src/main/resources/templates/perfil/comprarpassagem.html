@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!-- ICON GO TO -->
+	<link rel="shortcut icon" th:href="@{/img/icon_goto.png}" type="image/x-icon">
+
+	<!-- BOOTSTRAP -->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+	<!-- GOOGLE ICON -->
+	<link rel="stylesheet"
+		href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+	<!-- CSS EXTERNO -->
+	<link rel="stylesheet" th:href="@{/css/profile.css}">
+
+
+	<title>Comprar passagem</title>
+</head>
+
+<body>
+
+
+	<!-- LAYOUT NOVO -->
+	<header>
+
+		<div class="logo">
+			<img th:src="@{/img/agencia_viagens_small.png}" alt="logo" id="logo">
+		</div>
+
+		<div class="welcome">
+
+			<span>Olá, <strong th:text="${session.usuarioLogado.nome}">NOME</strong>. Seja bem vindo(a)!</span>
+
+			<div class="datahora">
+				<span><strong>Data:</strong> <span id="data"></span>.</span>
+				<span><strong>Hora:</strong> <span id="hora"></span>.</span>
+			</div>
+
+		</div>
+
+		<div class="text-light d-flex align-items-center justify-content-end botao-sair">
+
+			<button type="submit" class="material-symbols-outlined logout" data-bs-toggle="modal"
+				data-bs-target="#staticBackdrop"> logout </button>
+
+		</div>
+
+
+		<!-- MODAL -->
+		<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+			aria-labelledby="staticBackdropLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header bg-warning">
+						<h5 class="modal-title text-light" id="staticBackdropLabel"><strong>Logout</strong></h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body text-danger">
+						<strong>Você tem certeza que deseja sair?</strong>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary p-2" data-bs-dismiss="modal">Cancelar</button>
+
+						<form action="/logout" method="post">
+							<button type="submit" class="btn btn-primary p-2 ml-3 sair">Sim, quero sair.</button>
+						</form>
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+	</header>
+
+
+
+	<div class="grid-layout">
+
+		<!-- MENU -->
+		<nav>
+
+			<ul>
+				<a href="/perfil">
+
+					<span class="material-symbols-outlined"> home </span>
+
+					<li>Início </li>
+
+				</a>
+
+				<form action="/minhasPassagens" method="post" class="minhasPassagensLink" onclick="submit()">
+					<input type="hidden" name="usuario" th:value="${session.usuarioLogado.id}" />
+
+					<span class="material-symbols-outlined"> flight
+					</span>
+
+					<li> Minhas Passagens </li>
+				</form>
+
+				<a href="#">
+
+					<span class="material-symbols-outlined">
+						shopping_cart_checkout
+					</span>
+
+					<li class="viagens">Comprar passagem</li>
+				</a>
+
+				<a href="/infoCadastrais">
+
+					<span class="material-symbols-outlined">
+						info
+					</span>
+
+					<li>Info. Cadastrais</li>
+				</a>
+
+				<a href="/excluirConta">
+
+					<span class="material-symbols-outlined">
+						cancel </span>
+
+					<li>Excluir minha conta</li>
+				</a>
+
+			</ul>
+
+
+		</nav>
+
+		<!-- FIM MENU -->
+
+
+
+		<!-- PRINCIPAL -->
+		<main>
+
+			<h2 class="text-center mt-3 mb-3">Comprar Passagem</h2>
+
+			<!-- INÍCIO - BUSCAR PASSAGENS -->
+			<div class="container">
+
+				<form action="/perfil/buscarPassagem" method="get">
+
+					<div class="row">
+
+						<div class="col-md-12">
+
+							<h3 class="mt-3 text-primary text-justify"> BUSCAR PASSAGENS </h3>
+
+						</div>
+
+					</div>
+
+					<div class="row m-0">
+
+						<div class="col-12 mt-3">
+
+							<label class="text-dark form-label" for="saida">De onde você está saindo?
+								<strong>(embarque)</strong></label>
+							<input class="p-2" type="text" name="embarque" id="saida"
+								placeholder="Informe o ponto de partida" required />
+
+
+						</div>
+
+						<div class="col-12 mt-3">
+
+							<label class="text-dark form-label" for="destino">Para onde você vai?
+								<strong>(destino)</strong></label>
+							<input class="p-2" type="text" name="destino" id="destino" placeholder="Informe o destino"
+								required />
+
+						</div>
+
+					</div>
+
+
+					<div class="row mt-3">
+
+						<!-- VARIÁVEL DE ERRO -->
+						<!--<div class="col-md-12 alert alert-danger text-center mt-3" role="alert" th:text="${msg}"> </div>-->
+
+						<div class="col-12 mt-3 mb-3 text-justify">
+
+							<button type="submit" class="buscarPassagem"> BUSCAR </button>
+
+						</div>
+
+
+					</div>
+
+				</form>
+
+
+			</div>
+
+			<!-- FIM BUSCAR PASSAGENS -->
+
+
+
+			<!-- INÍCIO LISTA DE PASSAGENS -->
+
+			<div class="row mb-5">
+
+				<div class="col-12">
+
+					<h3 class="mt-5 mb-3 text-success">PASSAGENS DISPONÍVEIS</h3>
+
+				</div>
+
+				<div class="col-12">
+					<div id="table">
+						<table class="table">
+							<thead>
+								<tr>
+									<th scope="col">Id</th>
+									<th scope="col">Embarque</th>
+									<th scope="col">Destino</th>
+									<th scope="col">Data Ida</th>
+									<th scope="col">Data Volta</th>
+									<th scope="col">Preço</th>
+									<th scope="col">Condição</th>
+									<th scope="col">Qtd Disponível</th>
+									<th scope="col">Categoria</th>
+									<th scope="col">Ações</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="destinos : ${destinos}">
+									<th scope="row" th:text="${destinos.id}"></th>
+									<td class="text-danger" th:text="${destinos.embarque}"></td>
+									<td class="text-success" th:text="${destinos.destino}"></td>
+									<td> <input type="date" th:value="${destinos.dataIda}" disabled /> </td>
+									<td> <input class="dataVolta" type="date" th:value="${destinos.dataVolta}"
+											disabled />
+									</td>
+									<td th:text="${destinos.preco}"></td>
+									<td class="text-danger" th:text="${destinos.condicao}"></td>
+									<td th:text="${destinos.quantidade}"></td>
+									<td th:text="${destinos.categoria}"></td>
+									<td>
+
+										<a th:href="@{/{id}/realizarPedido (id=${destinos.id})}"
+											class="btn btn-success">
+											Comprar
+										</a>
+
+									</td>
+								</tr>
+							</tbody>
+						</table>
+
+					</div>
+				</div>
+
+			</div>
+
+			<!-- FIM PASSAGENS -->
+
+
+
+		</main>
+		<!-- PRINCIPAL -->
+
+
+	</div>
+	<!-- LAYOUT NOVO -->
+
+
+
+
+	<script th:src="@{/js/perfil.js}"></script>
+
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+		crossorigin="anonymous"></script>
+</body>
+
+</html>
